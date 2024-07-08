@@ -1,0 +1,5 @@
+
+
+g++ -std=c++11 -o server server.cpp                               
+
+Client % g++ -o client Client.cpp  
