@@ -21,7 +21,7 @@ void print_menu(int menu_level) {
             printf("1. Hiển thị thông tin đăng nhập\n");
             printf("2. Đổi mật khẩu\n");
             printf("3. Option 3\n");
-            printf("4. Option 4\n");
+            printf("4. Đếm số trứng\n");
             printf("5. Thoát\n");
             break;
         case 2:
@@ -35,27 +35,18 @@ void print_menu(int menu_level) {
     }
 }
 
-// Hàm đọc dữ liệu từ file vào buffer
-void read_data_from_file(const char *filename, char *buffer, size_t buffer_size) {
+// Hàm đọc dữ liệu từ file và in ra console
+void read_and_print_file(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         perror("Lỗi mở file");
         return;
     }
 
-    // Đọc dữ liệu từ file vào buffer
-    size_t total_read = 0;
     char line[MAX_DATA_SIZE];
     while (fgets(line, sizeof(line), file)) {
-        // Nối dòng vào buffer (kiểm tra tràn buffer)
-        size_t line_len = strlen(line);
-        if (total_read + line_len < buffer_size) {
-            strcat(buffer, line);
-            total_read += line_len;
-        } else {
-            printf("Vượt quá kích thước buffer, dữ liệu có thể bị cắt.\n");
-            break;
-        }
+        printf("%s", line);
+        sleep(5); // Chờ 5 giây trước khi in dòng tiếp theo
     }
 
     fclose(file);
@@ -67,7 +58,6 @@ int main() {
     char username[100], password[100], new_password[100], buffer[2048] = {0};
     int menu_choice;
     int submenu_choice;
-
 
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         printf("\n Lỗi tạo socket \n"); // In thông báo lỗi nếu không tạo được socket
@@ -179,6 +169,9 @@ int main() {
                         printf("Lựa chọn không hợp lệ trong submenu.\n");
                     }
                 }
+            } else if (menu_choice == 4) {
+                printf("Đếm số trứng...\n");
+                read_and_print_file("Demsotrung.txt");
             } else if (menu_choice == 5) {
                 printf("Thoát...\n");
                 break;
@@ -189,6 +182,6 @@ int main() {
     }
 
     // Đóng kết nối
-    // close(sock);
+    close(sock);
     return 0;
-} //Client.cpp
+}
